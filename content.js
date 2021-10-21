@@ -4,7 +4,7 @@ function getProjectType(project_id) {
   // return project type: sbs, standard
   const re_sbs = /(sbs)/;
   const result = project_id.match(re_sbs);
-  if (result.length > 0) {
+  if (result) {
     return "sbs";
   } else return "standard";
 }
