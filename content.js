@@ -1,28 +1,176 @@
-let time_fn = setInterval(() => {
-  // First
-  let project_name_el = document.querySelector("#project-name");
-  if (project_name_el) {
-    if (!project_name_el.onclick) {
-      project_name_el.onclick = () => {
-        console.log(document.querySelector("#project-name").innerText.trim());
+const MAX_STANDARD_ANSWER_LEN = 5;
+
+function getProjectType(project_id) {
+  // return project type: sbs, standard
+  const re_sbs = /(sbs)/;
+  const result = project_id.match(re_sbs);
+  if (result.length > 0) {
+    return "sbs";
+  } else return "standard";
+}
+
+function getResults(project_type) {
+  let all_resultDict;
+  if (project_type === "standard") {
+    let all_parsecResult = [
+      ...document
+        .getElementsByClassName("iframe")[0]
+        .getElementsByTagName("iframe")
+        .item(0)
+        .contentDocument.querySelectorAll(".parsec-result"),
+    ];
+    all_resultDict = all_parsecResult.map((parsecResult) => {
+      let type = parsecResult.parentNode.className.split(" ")[1];
+      let title = parsecResult.querySelector(".title")?.innerText;
+      let description = [...parsecResult.querySelectorAll(".description")]
+        ?.map((des) => des.innerText)
+        .join("\n");
+      let footnote = parsecResult.querySelector(".footnote")?.innerText;
+      let link = parsecResult.querySelector("a")?.getAttribute("href");
+      let resultDict = {
+        type: type ? type : "",
+        title: title ? title : "",
+        description: description ? description : "",
+        footnote: footnote ? footnote : "",
+        link: link ? link : "",
       };
-    }
+      return resultDict;
+    });
+  } else if (project_type === "sbs") {
+    all_resultDict = [];
   }
-  // Second
+  return all_resultDict;
+}
+
+function getQueryText(project_type) {
+  if (project_type === "standard") {
+    return document
+      .getElementsByClassName("iframe")[0]
+      .getElementsByTagName("iframe")
+      .item(0)
+      .contentDocument.getElementsByClassName("search-input form-control")[0]
+      .getAttribute("value");
+  } else if (project_type === "valid") {
+    return document.querySelector("#widget-container h1").innerText;
+  } else if (project_type === "sbs") {
+    return document.querySelector(".utterance").innerText;
+  } else if (project_type === "token") {
+    return document.querySelector("#input-field").querySelector("input").value;
+  } else if (project_type === "classify") {
+    return document.querySelector("#display-section").querySelector("h1")
+      .textContent;
+  }
+}
+
+function getProjectLinkIdLocale() {
+  const url = window.location["href"];
+  const re_id_locale = /\/project\/(\S+?)\/grading\/(\S+?)\//;
+  const matched_array = url.match(re_id_locale);
+  if (matched_array.length > 0) {
+    return [url, matched_array[1], matched_array[2]];
+  }
+  return ["", "", ""];
+}
+
+function getSearchDateLocation(project_type) {
+  if (project_type === "standard") {
+    const re_date = /from (.+?)\./;
+    return document
+      .querySelector(".message.blue")
+      .querySelector("p")
+      .firstChild.textContent.match(re_date)[1];
+  } else if (project_type === "sbs") {
+    return document.querySelector(".html-widget-wrapper").querySelector("p")
+      .textContent;
+  }
+}
+
+function getGrader() {
+  return document
+    .querySelector("#dd-menu__shared_component__-1-item0")
+    .innerText.trim()
+    .replace(" ", "");
+}
+
+function getAnswer(project_type) {
+  if (project_type === "standard") {
+    let _ans = [];
+    [...Array(MAX_STANDARD_ANSWER_LEN).keys()].forEach((el) => {
+      if (
+        document.getElementById(
+          `result${el}_validationresult${el}_inappropriate`
+        )?.checked
+      ) {
+        _ans.push("i");
+        return;
+      }
+      if (
+        document.getElementById(
+          `result${el}_validationresult${el}_wrong_language`
+        )?.checked
+      ) {
+        _ans.push("l");
+        return;
+      }
+      if (
+        document.getElementById(
+          `result${el}_validationresult${el}_cannot_be_judged`
+        )?.checked
+      ) {
+        _ans.push("x");
+        return;
+      }
+      if (document.getElementById(`result${el}_relevanceexcellent`)?.checked) {
+        _ans.push("e");
+        return;
+      }
+      if (document.getElementById(`result${el}_relevancegood`)?.checked) {
+        _ans.push("g");
+        return;
+      }
+      if (document.getElementById(`result${el}_relevancefair`)?.checked) {
+        _ans.push("f");
+        return;
+      }
+      if (document.getElementById(`result${el}_relevancebad`)?.checked) {
+        _ans.push("b");
+        return;
+      }
+    });
+    const ans_str = _ans.join("");
+    return ans_str;
+  }
+}
+
+function getPostData() {
+  let [link, project_id, locale] = getProjectLinkIdLocale();
+  let project_type = getProjectType(project_id);
+  let seachText = getSearchDateLocation(project_type);
+  let query = getQueryText(project_type);
+  let answer = getAnswer(project_type);
+  let grader = getGrader();
+  let results = getResults(project_type);
+  let data = {
+    searchDateLocation: seachText,
+    query_text: query,
+    link: link,
+    answer: answer,
+    grader: grader,
+    project_id: project_id,
+    locale: locale,
+    results: results,
+  };
+  return data;
+}
+
+let interval_fn = setInterval(() => {
+  // click the next-btn
   let message_el = document.querySelector(".message");
   if (message_el) {
     if (!message_el.onclick) {
       message_el.onclick = () => {
-        console.log("abc here");
-      };
-    }
-  }
-  // Third
-  let title_el = document.querySelector(".header-wrapper");
-  if (title_el) {
-    if (!title_el.onclick) {
-      title_el.onclick = () => {
-        console.log("asasdasdasdasdasdasdasdasdasda");
+        let data = getPostData();
+        console.log(data);
       };
     }
   }
