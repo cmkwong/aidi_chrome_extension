@@ -10,13 +10,12 @@ function getNextBtn() {
   }
 }
 
-function getPostUrl(nextBtn) {
-  let url =
-    "https://aidi-work-helper.herokuapp.com/api/v1/query?insertAns=true";
-  if (nextBtn.getAttribute("a") === "a") {
-    url = "https://aidi-work-helper.herokuapp.com/api/v1/query?insertAns=false";
+// notInsert is for checking if answers allowed to insert to DB. If auto, forbidden, if manual, allowed.
+function getInsertedAllowed(nextBtn) {
+  if (nextBtn.classList.contains("notInsert")) {
+    return "false";
   }
-  return url;
+  return "true";
 }
 
 function getProjectType(project_id) {
@@ -190,7 +189,9 @@ let interval_fn = setInterval(() => {
     if (!message_el.onclick) {
       message_el.onclick = () => {
         let data = getPostData();
-        let url = getPostUrl(nextBtn);
+        let url = `https://aidi-work-helper.herokuapp.com/api/v1/query?insertAns=${getInsertedAllowed(
+          nextBtn
+        )}`;
         console.log(data);
         $.ajax({
           type: "POST",
