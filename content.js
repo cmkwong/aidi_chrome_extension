@@ -181,12 +181,12 @@ function getPostData() {
   return data;
 }
 
-// let nextBtn = getNextBtn();
-let message_el = document.querySelector(".message");
+let nextBtn = getNextBtn();
+// let message_el = document.querySelector(".message");
 let interval_fn = setInterval(() => {
   // click the next-btn
-  if (message_el) {
-    message_el.onclick = () => {
+  if (nextBtn) {
+    nextBtn.onclick = () => {
       let data = getPostData();
       let url = `https://aidi-work-helper.herokuapp.com/api/v1/query?insertAns=${getInsertedAllowed(
         nextBtn
