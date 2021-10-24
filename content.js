@@ -1,5 +1,23 @@
 const MAX_STANDARD_ANSWER_LEN = 5;
 
+function getNextBtn() {
+  let project_type = getProjectType(project_id);
+  if (project_type === "standard") {
+    return document.getElementById("grading-nav-next-shortcut");
+  } else if (project_type === "sbs") {
+    return document.getElementsByClassName("forward-btn")[0];
+  }
+}
+
+function getPostUrl(nextBtn) {
+  let url =
+    "https://aidi-work-helper.herokuapp.com/api/v1/query?insertAns=true";
+  if (nextBtn.getAttribute("a") === "a") {
+    url = "https://aidi-work-helper.herokuapp.com/api/v1/query?insertAns=false";
+  }
+  return url;
+}
+
 function getProjectType(project_id) {
   // return project type: sbs, standard
   const re_sbs = /(sbs)/;
@@ -143,18 +161,18 @@ function getAnswer(project_type) {
 }
 
 function getPostData() {
-  let [link, project_id, locale] = getProjectLinkIdLocale();
+  let [query_link, project_id, locale] = getProjectLinkIdLocale();
   let project_type = getProjectType(project_id);
-  let seachText = getSearchDateLocation(project_type);
-  let query = getQueryText(project_type);
-  let answer = getAnswer(project_type);
+  let searchDateLocation = getSearchDateLocation(project_type);
+  let query_text = getQueryText(project_type);
+  let grader_ans = getAnswer(project_type);
   let grader = getGrader();
   let results = getResults(project_type);
   let data = {
-    searchDateLocation: seachText,
-    query_text: query,
-    link: link,
-    answer: answer,
+    searchDateLocation: searchDateLocation,
+    query_text: query_text,
+    query_link: query_link,
+    grader_ans: grader_ans,
     grader: grader,
     project_id: project_id,
     locale: locale,
@@ -165,12 +183,25 @@ function getPostData() {
 
 let interval_fn = setInterval(() => {
   // click the next-btn
+  let nextBtn = getNextBtn();
   let message_el = document.querySelector(".message");
   if (message_el) {
     if (!message_el.onclick) {
       message_el.onclick = () => {
         let data = getPostData();
+        let url = getPostUrl(nextBtn);
         console.log(data);
+        $.ajax({
+          type: "POST",
+          data: data,
+          url: url,
+          success: function (output) {
+            console.log(output);
+          },
+          error: function (err) {
+            console.log(err);
+          },
+        });
       };
     }
   }
