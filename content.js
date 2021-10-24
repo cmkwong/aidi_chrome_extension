@@ -4,7 +4,7 @@ function getNextBtn() {
   let [link, project_id, locale] = getProjectLinkIdLocale();
   let project_type = getProjectType(project_id);
   if (project_type === "standard") {
-    return document.getElementById("grading-nav-next-shortcut");
+    return document.getElementsByClassName("forward-btn")[0];
   } else if (project_type === "sbs") {
     return document.getElementsByClassName("forward-btn")[0];
   }
