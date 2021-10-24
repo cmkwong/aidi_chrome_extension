@@ -1,6 +1,6 @@
 const MAX_STANDARD_ANSWER_LEN = 5;
 
-function getNextBtn(project_type) {
+function getNextBtn() {
   let [link, project_id, locale] = getProjectLinkIdLocale();
   let project_type = getProjectType(project_id);
   if (project_type === "standard") {
