@@ -1,6 +1,7 @@
 const MAX_STANDARD_ANSWER_LEN = 5;
 
 function getNextBtn() {
+  let [_, project_id, _] = getProjectLinkIdLocale();
   let project_type = getProjectType(project_id);
   if (project_type === "standard") {
     return document.getElementById("grading-nav-next-shortcut");
