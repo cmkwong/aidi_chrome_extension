@@ -186,25 +186,23 @@ let interval_fn = setInterval(() => {
   let nextBtn = getNextBtn();
   let message_el = document.querySelector(".message");
   if (message_el) {
-    if (!message_el.onclick) {
-      message_el.onclick = () => {
-        let data = getPostData();
-        let url = `https://aidi-work-helper.herokuapp.com/api/v1/query?insertAns=${getInsertedAllowed(
-          nextBtn
-        )}`;
-        console.log(data);
-        $.ajax({
-          type: "POST",
-          data: data,
-          url: url,
-          success: function (output) {
-            console.log(output);
-          },
-          error: function (err) {
-            console.log(err);
-          },
-        });
-      };
-    }
+    message_el.onclick = () => {
+      let data = getPostData();
+      let url = `https://aidi-work-helper.herokuapp.com/api/v1/query?insertAns=${getInsertedAllowed(
+        nextBtn
+      )}`;
+      console.log(data);
+      $.ajax({
+        type: "POST",
+        data: data,
+        url: url,
+        success: function (output) {
+          console.log(output);
+        },
+        error: function (err) {
+          console.log(err);
+        },
+      });
+    };
   }
 }, 1000);
