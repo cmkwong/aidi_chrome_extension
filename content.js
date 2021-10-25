@@ -1,21 +1,33 @@
 const MAX_STANDARD_ANSWER_LEN = 5;
 
 function getNextBtn() {
-  let [link, project_id, locale] = getProjectLinkIdLocale();
-  let project_type = getProjectType(project_id);
-  if (project_type === "standard") {
-    return document.getElementsByClassName("forward-btn")[0];
-  } else if (project_type === "sbs") {
-    return document.getElementsByClassName("forward-btn")[0];
+  try {
+    let [link, project_id, locale] = getProjectLinkIdLocale();
+    let project_type = getProjectType(project_id);
+    if (project_type === "standard") {
+      return document.getElementsByClassName("forward-btn")[0];
+    } else if (project_type === "sbs") {
+      return document.getElementsByClassName("forward-btn")[0];
+    }
+  } catch {
+    (err) => {
+      console.log(err);
+    };
   }
 }
 
 // notInsert is for checking if answers allowed to insert to DB. If auto, forbidden, if manual, allowed.
 function getInsertedAllowed(nextBtn) {
-  if (nextBtn.classList.contains("notInsert")) {
-    return "false";
+  try {
+    if (nextBtn.classList.contains("notInsert")) {
+      return "false";
+    }
+    return "true";
+  } catch {
+    (err) => {
+      console.log(err);
+    };
   }
-  return "true";
 }
 
 function getProjectType(project_id) {
@@ -161,24 +173,30 @@ function getAnswer(project_type) {
 }
 
 function getPostData() {
-  let [query_link, project_id, locale] = getProjectLinkIdLocale();
-  let project_type = getProjectType(project_id);
-  let searchDateLocation = getSearchDateLocation(project_type);
-  let query_text = getQueryText(project_type);
-  let grader_ans = getAnswer(project_type);
-  let grader = getGrader();
-  let results = getResults(project_type);
-  let data = {
-    searchDateLocation: searchDateLocation,
-    query_text: query_text,
-    query_link: query_link,
-    grader_ans: grader_ans,
-    grader: grader,
-    project_id: project_id,
-    locale: locale,
-    results: results,
-  };
-  return data;
+  try {
+    let [query_link, project_id, locale] = getProjectLinkIdLocale();
+    let project_type = getProjectType(project_id);
+    let searchDateLocation = getSearchDateLocation(project_type);
+    let query_text = getQueryText(project_type);
+    let grader_ans = getAnswer(project_type);
+    let grader = getGrader();
+    let results = getResults(project_type);
+    let data = {
+      searchDateLocation: searchDateLocation,
+      query_text: query_text,
+      query_link: query_link,
+      grader_ans: grader_ans,
+      grader: grader,
+      project_id: project_id,
+      locale: locale,
+      results: results,
+    };
+    return data;
+  } catch {
+    (err) => {
+      console.log(err);
+    };
+  }
 }
 
 let nextBtn;
