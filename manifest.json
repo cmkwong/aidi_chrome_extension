@@ -1,6 +1,6 @@
 {
   "name": "Working Extension",
-  "description": "Project status update",
+  "description": "Apple connection",
   "version": "1.0.0",
   "manifest_version": 3,
   "background": {

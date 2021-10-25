@@ -209,7 +209,7 @@ function getPostData() {
 let nextBtn;
 let interval_fn = setInterval(() => {
   // let message_el = document.querySelector(".message");
-  if (!nextBtn) nextBtn = getNextBtn();
+  nextBtn = getNextBtn();
   // click the next-btn
   if (nextBtn) {
     if (!nextBtn.onclick) {
