@@ -23,11 +23,11 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://crowdcollect2*/*"],
+      "matches": ["https://crowdcollect2.siri.apple.com/*"],
       "js": ["jquery.js"]
     },
     {
-      "matches": ["https://crowdcollect2*/*"],
+      "matches": ["https://crowdcollect2.siri.apple.com/*"],
       "js": ["content.js"]
     }
   ],
