@@ -74,12 +74,19 @@ function getResults(project_type) {
 
 function getQueryText(project_type) {
   if (project_type === "standard") {
-    return document
+    let query_txt = document
       .getElementsByClassName("iframe")[0]
       .getElementsByTagName("iframe")
       .item(0)
       .contentDocument.getElementsByClassName("search-input form-control")[0]
       .getAttribute("value");
+    if (query_txt)
+      return document
+        .getElementsByClassName("iframe")[0]
+        .getElementsByTagName("iframe")
+        .item(0)
+        .contentDocument.getElementsByClassName("search-input form-control")[0]
+        .getAttribute("value");
   } else if (project_type === "valid") {
     return document.querySelector("#widget-container h1").innerText;
   } else if (project_type === "sbs") {
