@@ -53,7 +53,7 @@ function getResults(project_type) {
       let type = parsecResult.parentNode.className.split(" ")[1];
       let title = parsecResult.querySelector(".title")?.innerText;
       let description = [...parsecResult.querySelectorAll(".description")]
-        ?.map((des) => des.innerText)
+        ?.map((des) => des.innerText.substring(0, 200))
         .join("\n");
       let footnote = parsecResult.querySelector(".footnote")?.innerText;
       let link = parsecResult.querySelector("a")?.getAttribute("href");
