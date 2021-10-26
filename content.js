@@ -103,7 +103,7 @@ function getProjectLinkIdLocale() {
   const url = window.location["href"];
   const re_id_locale = /\/project\/(\S+?)\/grading\/(\S+?)\//;
   const matched_array = url.match(re_id_locale);
-  if (matched_array.length > 0) {
+  if (matched_array) {
     return [url, matched_array[1], matched_array[2]];
   }
   return ["", "", ""];
