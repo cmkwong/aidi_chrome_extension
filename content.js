@@ -1,4 +1,4 @@
-const MAX_STANDARD_ANSWER_LEN = 5;
+const MAX_STANDARD_ANSWER_LEN = 6;
 
 function getNextBtn() {
   try {
