@@ -295,11 +295,11 @@ let interval_fn = setInterval(() => {
             url: url,
             success: function () {
               alert(
-                `Good!\n${data.project_id} (${data.locale}) pop-up is updated`
+                `Good!\n\nproject: ${data.project_id}\nlocale: ${data.locale}\npop-up is updated`
               );
             },
             error: function () {
-              alert("Bad.\nNot updated");
+              alert("Bad.\nNot updated.\nCheck the connect please.");
             },
           });
         } else {
