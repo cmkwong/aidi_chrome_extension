@@ -16,6 +16,14 @@ function getNextBtn() {
   }
 }
 
+function getPopUpWindow() {
+  return document.querySelector(".swal2-popup .swal2-header");
+}
+
+function getPopUpBtn() {
+  return document.querySelector(".swal2-actions button");
+}
+
 // notInsert is for checking if answers allowed to insert to DB. If auto, forbidden, if manual, allowed.
 function getInsertedAllowed(nextBtn) {
   try {
@@ -179,7 +187,7 @@ function getAnswer(project_type) {
   }
 }
 
-function getPostData() {
+function getQueryPostData() {
   try {
     let [query_link, project_id, locale] = getProjectLinkIdLocale();
     let project_type = getProjectType(project_id);
@@ -206,15 +214,56 @@ function getPostData() {
   }
 }
 
-let nextBtn;
+//********************Pop up*********************/
+function getLocaleFromPopup() {
+  try {
+    const message = document.querySelector("#swal2-content").innerText;
+    const pos = document.querySelector("#swal2-content").innerText.search("_");
+    const locale = message.substring(pos - 2, pos + 3);
+    if (locale) {
+      return locale;
+    }
+  } catch (err) {
+    return;
+  }
+}
+
+function getProjectId() {
+  const url = window.location["href"];
+  const re_id = /\/project\/(\S+?)\//;
+  const matched_array = url.match(re_id);
+  if (matched_array) {
+    return matched_array[1];
+  }
+  return;
+}
+
+function getPopUpPostData() {
+  // get locale
+  const locale = getLocaleFromPopup();
+  // get project id
+  const project_id = getProjectId();
+  // get grader name
+  const grader = getGrader();
+  if (!locale || !project_id || !grader) return;
+  const data = {
+    project_id: project_id,
+    locale: locale,
+    grader: grader,
+  };
+  return data;
+}
+
+let nextBtn, popUpWindow;
 let interval_fn = setInterval(() => {
   // let message_el = document.querySelector(".message");
   nextBtn = getNextBtn();
+  popUpWindow = getPopUpWindow();
   // click the next-btn
   if (nextBtn) {
     if (!nextBtn.onclick) {
       nextBtn.onclick = () => {
-        let data = getPostData();
+        let data = getQueryPostData();
         let url = `https://aidi-work-helper.herokuapp.com/api/v1/query?insertAns=${getInsertedAllowed(
           nextBtn
         )}`;
@@ -230,6 +279,32 @@ let interval_fn = setInterval(() => {
             console.log(err);
           },
         });
+      };
+    }
+  }
+  if (popUpWindow) {
+    if (!popUpWindow.onclick) {
+      popUpWindow.onclick = () => {
+        let data = getPopUpPostData();
+        let url =
+          "https://aidi-work-helper.herokuapp.com/api/v1/project/status";
+        if (data) {
+          $.ajax({
+            type: "POST",
+            data: data,
+            url: url,
+            success: function () {
+              alert(
+                `Good!\n${data.project_id} (${data.locale}) pop-up is updated`
+              );
+            },
+            error: function () {
+              alert("Bad.\nNot updated");
+            },
+          });
+        } else {
+          alert("Bad\nNot updated");
+        }
       };
     }
   }
