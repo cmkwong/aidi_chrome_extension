@@ -295,7 +295,7 @@ let interval_fn = setInterval(() => {
             url: url,
             success: function () {
               alert(
-                `Good!\n\nproject: ${data.project_id}\nlocale: ${data.locale}\npop-up is updated`
+                `Good! pop-up is updated\n\nproject: ${data.project_id}\nlocale: ${data.locale}`
               );
             },
             error: function () {
