@@ -80,6 +80,26 @@ function getResults(project_type) {
   return all_resultDict;
 }
 
+function getResultLinks(project_type) {
+  let all_resultLinkArray;
+  if (project_type === "standard") {
+    let all_parsecResult = [
+      ...document
+        .getElementsByClassName("iframe")[0]
+        .getElementsByTagName("iframe")
+        .item(0)
+        .contentDocument.querySelectorAll(".parsec-result"),
+    ];
+    all_resultLinkArray = all_parsecResult.map((parsecResult) => {
+      let link = parsecResult.querySelector("a")?.getAttribute("href");
+      return link ? link : "NO LINK";
+    });
+  } else if (project_type === "sbs") {
+    all_resultLinkArray = [];
+  }
+  return all_resultLinkArray;
+}
+
 function getQueryText(project_type) {
   if (project_type === "standard") {
     let query_txt = document
@@ -272,12 +292,8 @@ let interval_fn = setInterval(() => {
           type: "POST",
           data: data,
           url: url,
-          success: function (output) {
-            console.log(output);
-          },
-          error: function (err) {
-            console.log(err);
-          },
+          success: function () {},
+          error: function () {},
         });
       };
     }
