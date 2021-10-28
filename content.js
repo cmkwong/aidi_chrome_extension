@@ -287,7 +287,6 @@ let interval_fn = setInterval(() => {
         let url = `https://aidi-work-helper.herokuapp.com/api/v1/query?insertAns=${getInsertedAllowed(
           nextBtn
         )}`;
-        console.log(data);
         $.ajax({
           type: "POST",
           data: data,
