@@ -103,17 +103,13 @@ function getResultLinks(project_type) {
 function getQueryText(project_type) {
   if (project_type === "standard") {
     let query_txt = document
-      .getElementsByClassName("iframe")[0]
-      .getElementsByTagName("iframe")
-      .item(0)
-      .contentDocument.getElementsByClassName("search-input form-control")[0]
+      .querySelector("iframe")
+      .contentDocument.querySelector(".search input")
       .getAttribute("value");
     if (query_txt)
       return document
-        .getElementsByClassName("iframe")[0]
-        .getElementsByTagName("iframe")
-        .item(0)
-        .contentDocument.getElementsByClassName("search-input form-control")[0]
+        .querySelector("iframe")
+        .contentDocument.querySelector(".search input")
         .getAttribute("value");
   } else if (project_type === "valid") {
     return document.querySelector("#widget-container h1").innerText;
