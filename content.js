@@ -2,7 +2,8 @@ const MAX_STANDARD_ANSWER_LEN = 6;
 
 function getNextBtn() {
   try {
-    let [link, project_id, locale] = getProjectLinkIdLocale();
+    let [link, project_id, locale, query_code] =
+      getProjectLink_Id_Locale_Querycode();
     let project_type = getProjectType(project_id);
     if (project_type === "standard") {
       return document.getElementsByClassName("forward-btn")[0];
@@ -123,14 +124,14 @@ function getQueryText(project_type) {
   }
 }
 
-function getProjectLinkIdLocale() {
+function getProjectLink_Id_Locale_Querycode() {
   const url = window.location["href"];
-  const re_id_locale = /\/project\/(\S+?)\/grading\/(\S+?)\//;
+  const re_id_locale = /\/project\/(\S+?)\/grading\/(\S+?)\/s\/(\S+?)\//;
   const matched_array = url.match(re_id_locale);
   if (matched_array) {
-    return [url, matched_array[1], matched_array[2]];
+    return [url, matched_array[1], matched_array[2], matched_array[3]];
   }
-  return ["", "", ""];
+  return ["", "", "", ""];
 }
 
 function getSearchDateLocation(project_type) {
@@ -205,7 +206,8 @@ function getAnswer(project_type) {
 
 function getQueryPostData() {
   try {
-    let [query_link, project_id, locale] = getProjectLinkIdLocale();
+    let [query_link, project_id, locale, query_code] =
+      getProjectLink_Id_Locale_Querycode();
     let project_type = getProjectType(project_id);
     let searchDateLocation = getSearchDateLocation(project_type);
     let query_text = getQueryText(project_type);
@@ -220,6 +222,7 @@ function getQueryPostData() {
       grader: grader,
       project_id: project_id,
       locale: locale,
+      query_code: query_code,
       results: results,
     };
     return data;
