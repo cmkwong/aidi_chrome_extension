@@ -290,7 +290,9 @@ let interval_fn = setInterval(() => {
           type: "POST",
           data: data,
           url: url,
-          success: function () {},
+          success: function () {
+            console.log(data);
+          },
           error: function () {},
         });
       };
