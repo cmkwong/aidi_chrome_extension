@@ -273,6 +273,24 @@ function getPopUpPostData() {
   return data;
 }
 
+function sendPost() {
+  let url = `https://aidi-work-helper.herokuapp.com/api/v1/query?insertAns=${getInsertedAllowed(
+    nextBtn
+  )}`;
+  let data = getQueryPostData();
+  $.ajax({
+    type: "POST",
+    data: data,
+    url: url,
+    success: function (success) {
+      console.log(success);
+    },
+    error: function (err) {
+      console.log(err);
+    },
+  });
+}
+
 let nextBtn, popUpWindow;
 let interval_fn = setInterval(() => {
   // let message_el = document.querySelector(".message");
@@ -280,26 +298,15 @@ let interval_fn = setInterval(() => {
   popUpWindow = getPopUpWindow();
   // click the next-btn
   if (nextBtn) {
+    let data = getQueryPostData();
     if (!nextBtn.onclick) {
-      nextBtn.onclick = () => {
-        let data = getQueryPostData();
-        let url = `https://aidi-work-helper.herokuapp.com/api/v1/query?insertAns=${getInsertedAllowed(
-          nextBtn
-        )}`;
-        $.ajax({
-          type: "POST",
-          data: data,
-          url: url,
-          success: function () {
-            console.log(data, url);
-          },
-          error: function (err) {
-            console.log(err);
-          },
-        });
-      };
+      nextBtn.onclick = sendPost;
+    }
+    if (!nextBtn.onmousedown) {
+      nextBtn.onmousedown = sendPost;
     }
   }
+
   if (popUpWindow) {
     if (!popUpWindow.onclick) {
       popUpWindow.onclick = () => {
@@ -326,4 +333,4 @@ let interval_fn = setInterval(() => {
       };
     }
   }
-}, 1000);
+}, 500);
