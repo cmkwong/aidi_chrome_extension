@@ -48,23 +48,69 @@ function getProjectType(project_id) {
   } else return "standard";
 }
 
+function _get_result_title(result) {
+  const filters = {
+    v1: ".title",
+    v2: ".result-card-title",
+  };
+  let title;
+  for (const version in filters) {
+    title = result.querySelector(filters[version])?.innerText;
+    if (title) break;
+  }
+  return title;
+}
+
+function _get_result_description(result) {
+  const filters = {
+    v1: ".description",
+    v2: ".result-card-description",
+  };
+  let description;
+  for (const version in filters) {
+    description = [...result.querySelectorAll(filters[version])]
+      ?.map((des) => des.innerText.substring(0, 200))
+      .join("\n");
+    if (description) break;
+  }
+  return description;
+}
+
+function _get_result_footnote(result) {
+  const filters = {
+    v1: ".footnote",
+    v2: ".result-card-footnote",
+  };
+  let footnote;
+  for (const version in filters) {
+    footnote = result.querySelector(filters[version])?.innerText;
+    if (footnote) break;
+  }
+  return footnote;
+}
+
 function getResults(project_type) {
   let all_resultDict;
   if (project_type === "standard") {
     let all_parsecResult = [
       ...document
-        .getElementsByClassName("iframe")[0]
-        .getElementsByTagName("iframe")
-        .item(0)
-        .contentDocument.querySelectorAll(".parsec-result"),
+        .querySelector("iframe")
+        .contentDocument.querySelectorAll(".result"),
     ];
+    all_parsecResult.length !== 0
+      ? all_parsecResult
+      : (all_parsecResult = [
+          ...document
+            .getElementsByClassName("iframe")[0]
+            .getElementsByTagName("iframe")
+            .item(0)
+            .contentDocument.querySelectorAll(".parsec-result"),
+        ]);
     all_resultDict = all_parsecResult.map((parsecResult) => {
       let type = parsecResult.parentNode.className.split(" ")[1];
-      let title = parsecResult.querySelector(".title")?.innerText;
-      let description = [...parsecResult.querySelectorAll(".description")]
-        ?.map((des) => des.innerText.substring(0, 200))
-        .join("\n");
-      let footnote = parsecResult.querySelector(".footnote")?.innerText;
+      let title = _get_result_title(parsecResult);
+      let description = _get_result_description(parsecResult);
+      let footnote = _get_result_footnote(parsecResult);
       let link = parsecResult.querySelector("a")?.getAttribute("href");
       let resultDict = {
         type: type ? type : "",
@@ -103,15 +149,10 @@ function getResultLinks(project_type) {
 
 function getQueryText(project_type) {
   if (project_type === "standard") {
-    let query_txt = document
+    return document
       .querySelector("iframe")
       .contentDocument.querySelector(".search input")
       .getAttribute("value");
-    if (query_txt)
-      return document
-        .querySelector("iframe")
-        .contentDocument.querySelector(".search input")
-        .getAttribute("value");
   } else if (project_type === "valid") {
     return document.querySelector("#widget-container h1").innerText;
   } else if (project_type === "sbs") {
@@ -298,7 +339,6 @@ let interval_fn = setInterval(() => {
   popUpWindow = getPopUpWindow();
   // click the next-btn
   if (nextBtn) {
-    let data = getQueryPostData();
     if (!nextBtn.onclick) {
       nextBtn.onclick = sendPost;
     }
