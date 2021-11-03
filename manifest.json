@@ -1,7 +1,7 @@
 {
   "name": "Working Extension",
   "description": "Update Project Pop-up",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "manifest_version": 3,
   "background": {
     "service_worker": "background.js"

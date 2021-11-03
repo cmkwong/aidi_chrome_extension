@@ -17,6 +17,10 @@ function getNextBtn() {
   }
 }
 
+function getSentNotice() {
+  return document.querySelector(".validates-clicked");
+}
+
 function getPopUpWindow() {
   return document.querySelector(".swal2-popup .swal2-header");
 }
@@ -324,26 +328,43 @@ function sendPost() {
     data: data,
     url: url,
     success: function (success) {
+      console.log(data);
       console.log(success);
     },
     error: function (err) {
+      console.log(data);
       console.log(err);
     },
   });
 }
 
-let nextBtn, popUpWindow;
+let nextBtn, sentNotice, popUpWindow;
 let interval_fn = setInterval(() => {
-  // let message_el = document.querySelector(".message");
   nextBtn = getNextBtn();
+  sentNotice = getSentNotice(); // only for using short-cut (Ctrl+]) users
   popUpWindow = getPopUpWindow();
   // click the next-btn
   if (nextBtn) {
+    // for program user
     if (!nextBtn.onclick) {
       nextBtn.onclick = sendPost;
     }
+    // for hand-clicked button user
     if (!nextBtn.onmousedown) {
       nextBtn.onmousedown = sendPost;
+    }
+    // for short-cut user
+    if (!document.onkeydown) {
+      document.onkeydown = (e) => {
+        if (
+          e.ctrlKey && // if pressed Ctrl key
+          sentNotice && // if sentNotice exist
+          sentNotice.getAttribute("sent") !== "yes" // if sentNotice btn has not set to sent=yes
+        ) {
+          sendPost();
+          sentNotice.setAttribute("sent", "yes"); // avoid to repeated sending
+        }
+      };
     }
   }
 
