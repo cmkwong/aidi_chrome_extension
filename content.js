@@ -196,7 +196,7 @@ function getGrader() {
   return document
     .querySelector("#dd-menu__shared_component__-1-item0")
     .innerText.trim()
-    .replace(" ", "");
+    .replace(/ /g, "");
 }
 
 function getAnswer(project_type) {
