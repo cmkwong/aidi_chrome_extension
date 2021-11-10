@@ -346,26 +346,26 @@ let interval_fn = setInterval(() => {
   // click the next-btn
   if (nextBtn) {
     // for program user
-    if (!nextBtn.onclick) {
-      nextBtn.onclick = sendPost;
-    }
+    // if (!nextBtn.onclick) {
+    //   nextBtn.onclick = sendPost;
+    // }
     // for hand-clicked button user
     if (!nextBtn.onmousedown) {
       nextBtn.onmousedown = sendPost;
     }
     // for short-cut user
-    if (!document.onkeydown) {
-      document.onkeydown = (e) => {
-        if (
-          e.ctrlKey && // if pressed Ctrl key
-          sentNotice && // if sentNotice exist
-          sentNotice.getAttribute("sent") !== "yes" // if sentNotice btn has not set to sent=yes
-        ) {
-          sendPost();
-          sentNotice.setAttribute("sent", "yes"); // avoid to repeated sending
-        }
-      };
-    }
+    // if (!document.onkeydown) {
+    //   document.onkeydown = (e) => {
+    //     if (
+    //       e.ctrlKey && // if pressed Ctrl key
+    //       sentNotice && // if sentNotice exist
+    //       sentNotice.getAttribute("sent") !== "yes" // if sentNotice btn has not set to sent=yes
+    //     ) {
+    //       sendPost();
+    //       sentNotice.setAttribute("sent", "yes"); // avoid to repeated sending
+    //     }
+    //   };
+    // }
   }
 
   if (popUpWindow) {
@@ -394,4 +394,4 @@ let interval_fn = setInterval(() => {
       };
     }
   }
-}, 500);
+}, 5000);
