@@ -96,11 +96,13 @@ function _get_result_footnote(result) {
 function getResults(project_type) {
   let all_resultDict;
   if (project_type === "standard") {
+    // new version
     let all_parsecResult = [
       ...document
         .querySelector("iframe")
         .contentDocument.querySelectorAll(".result"),
     ];
+    // old version
     all_parsecResult.length !== 0
       ? all_parsecResult
       : (all_parsecResult = [
@@ -129,26 +131,6 @@ function getResults(project_type) {
     all_resultDict = [];
   }
   return all_resultDict;
-}
-
-function getResultLinks(project_type) {
-  let all_resultLinkArray;
-  if (project_type === "standard") {
-    let all_parsecResult = [
-      ...document
-        .getElementsByClassName("iframe")[0]
-        .getElementsByTagName("iframe")
-        .item(0)
-        .contentDocument.querySelectorAll(".parsec-result"),
-    ];
-    all_resultLinkArray = all_parsecResult.map((parsecResult) => {
-      let link = parsecResult.querySelector("a")?.getAttribute("href");
-      return link ? link : "NO LINK";
-    });
-  } else if (project_type === "sbs") {
-    all_resultLinkArray = [];
-  }
-  return all_resultLinkArray;
 }
 
 function getQueryText(project_type) {
@@ -354,18 +336,18 @@ let interval_fn = setInterval(() => {
       nextBtn.onmousedown = sendPost;
     }
     // for short-cut user
-    // if (!document.onkeydown) {
-    //   document.onkeydown = (e) => {
-    //     if (
-    //       e.ctrlKey && // if pressed Ctrl key
-    //       sentNotice && // if sentNotice exist
-    //       sentNotice.getAttribute("sent") !== "yes" // if sentNotice btn has not set to sent=yes
-    //     ) {
-    //       sendPost();
-    //       sentNotice.setAttribute("sent", "yes"); // avoid to repeated sending
-    //     }
-    //   };
-    // }
+    if (!document.onkeydown) {
+      document.onkeydown = (e) => {
+        if (
+          e.ctrlKey && // if pressed Ctrl key
+          sentNotice && // if sentNotice exist
+          sentNotice.getAttribute("sent") !== "yes" // if sentNotice btn has not set to sent=yes
+        ) {
+          sendPost();
+          sentNotice.setAttribute("sent", "yes"); // avoid to repeated sending
+        }
+      };
+    }
   }
 
   if (popUpWindow) {
