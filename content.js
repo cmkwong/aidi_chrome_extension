@@ -166,8 +166,8 @@ function getSearchDateLocation(project_type) {
     const re_date = /from (.+?)\./;
     return document
       .querySelector(".message.blue")
-      .querySelector("p")
-      .firstChild.textContent.match(re_date)[1];
+      ?.querySelector("p")
+      ?.firstChild.textContent.match(re_date)[1];
   } else if (project_type === "sbs") {
     return document.querySelector(".html-widget-wrapper").querySelector("p")
       .textContent;
@@ -305,6 +305,7 @@ function sendPost() {
     nextBtn
   )}`;
   let data = getQueryPostData();
+  if (!data) return;
   $.ajax({
     type: "POST",
     data: data,
@@ -328,9 +329,9 @@ let interval_fn = setInterval(() => {
   // click the next-btn
   if (nextBtn) {
     // for program user
-    // if (!nextBtn.onclick) {
-    //   nextBtn.onclick = sendPost;
-    // }
+    if (!nextBtn.onclick) {
+      nextBtn.onclick = sendPost;
+    }
     // for hand-clicked button user
     if (!nextBtn.onmousedown) {
       nextBtn.onmousedown = sendPost;
