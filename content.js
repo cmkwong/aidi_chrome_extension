@@ -234,19 +234,72 @@ function getAnswer(project_type) {
     });
     const ans_str = _ans.join('');
     return ans_str;
+  } else if (project_type === 'sbs') {
+    let ans_str;
+    // check if not validation
+    if (document.querySelector('#query_validationno_context')?.checked) {
+      ans_str = '1';
+    } else if (
+      document.querySelector('#query_validationno_incomplete')?.checked
+    ) {
+      ans_str = '2';
+    } else if (
+      document.querySelector('#query_validationno_contradictory')?.checked
+    ) {
+      ans_str = '3';
+    } else if (document.querySelector('#query_validationno_other')?.checked) {
+      ans_str = '4';
+      let comment = document.querySelector('textarea').value;
+      if (comment) {
+        ans_str += ' ' + comment;
+      }
+    }
+    if (ans_str) return ans_str;
+    // check if identical
+    if (document.querySelector('#identical_responsesyes')?.checked) {
+      return 's';
+    }
+    // check which preference and if comment ans_str existed
+    // get comment
+    let comment = document.querySelector('textarea').value;
+    // get preference
+    let _selectedPos, pref;
+    let nodeList = document.querySelectorAll('#selection-group-wrapper li');
+    nodeList.forEach((el, count) => {
+      if (el.querySelector('input.selected')) {
+        _selectedPos = count;
+      }
+    });
+    if (_selectedPos === 0) {
+      pref = 'aaa';
+    } else if (_selectedPos === 1) {
+      pref = 'aa';
+    } else if (_selectedPos === 2) {
+      pref = 'a';
+    } else if (_selectedPos === 3) {
+      pref = 'w';
+    } else if (_selectedPos === 4) {
+      pref = 'd';
+    } else if (_selectedPos === 5) {
+      pref = 'dd';
+    } else if (_selectedPos === 6) {
+      pref = 'ddd';
+    }
+    ans_str = pref + ' ' + comment;
+    return ans_str;
   }
 }
 
 function getQueryPostData() {
   try {
     let [query_link, project_id, locale, query_code] =
-      getProjectLink_Id_Locale_Querycode();
+      getProjectLink_Id_Locale_Querycode(); // must
     let project_type = getProjectType(project_id);
-    let searchDateLocation = getSearchDateLocation(project_type);
-    let query_text = getQueryText(project_type);
-    let grader_ans = getAnswer(project_type);
-    let grader = getGrader();
-    let results = getResults(project_type);
+    let searchDateLocation = getSearchDateLocation(project_type); // optional
+    let query_text = getQueryText(project_type); // optional
+    let grader_ans = getAnswer(project_type); // must
+    let grader = getGrader(); // must
+    let results = getResults(project_type); // optional
     let data = {
       searchDateLocation: searchDateLocation,
       query_text: query_text,
