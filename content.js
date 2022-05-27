@@ -50,11 +50,16 @@ function getProjectType(project_id) {
   // check for validation project
   const re_validation = /(validation)/;
   const re_spot = /(spot)/;
+  const re_saf = /(saf)/;
   const validationResult = project_id.match(re_validation);
-  const spotResult = project_id.match(re_spot);
+  const spotResult = project_id.match(re_spot); // checking if project id have word spot
+  const safResult = project_id.match(re_saf); // checking if project id have word saf
   if (sbsResult) {
     return 'sbs';
-  } else if (validationResult && spotResult) {
+  } else if (
+    (validationResult && spotResult) ||
+    (validationResult && safResult)
+  ) {
     return 'valid';
   } else return 'standard';
 }
