@@ -44,11 +44,18 @@ function getInsertedAllowed(nextBtn) {
 }
 
 function getProjectType(project_id) {
-  // return project type: sbs, standard
+  // check for sbs
   const re_sbs = /(sbs)/;
-  const result = project_id.match(re_sbs);
-  if (result) {
+  const sbsResult = project_id.match(re_sbs);
+  // check for validation project
+  const re_validation = /(validation)/;
+  const re_spot = /(spot)/;
+  const validationResult = project_id.match(re_validation);
+  const spotResult = project_id.match(re_spot);
+  if (sbsResult) {
     return 'sbs';
+  } else if (validationResult && spotResult) {
+    return 'valid';
   } else return 'standard';
 }
 
@@ -286,6 +293,24 @@ function getAnswer(project_type) {
       pref = 'ddd';
     }
     ans_str = pref + ' ' + comment;
+    return ans_str;
+  } else if (project_type === 'valid') {
+    let ans_str;
+    if (document.querySelector('#query_validationquery_vague')?.checked) {
+      ans_str = 'v';
+    } else if (
+      document.querySelector('#query_validationquery_inappropriate')?.checked
+    ) {
+      ans_str = 'i';
+    } else if (
+      document.querySelector('#query_validationquery_wrong_language')?.checked
+    ) {
+      ans_str = 'l';
+    } else if (document.querySelector('#query_validationvalid')?.checked) {
+      ans_str = 'n';
+    } else if (document.querySelector('#query_validationother')?.checked) {
+      ans_str = '@';
+    }
     return ans_str;
   }
 }
