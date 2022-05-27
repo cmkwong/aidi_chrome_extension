@@ -9,6 +9,10 @@ function getNextBtn() {
       return document.getElementsByClassName('forward-btn')[0];
     } else if (project_type === 'sbs') {
       return document.getElementsByClassName('forward-btn')[0];
+    } else if (project_type === 'valid') {
+      return document.getElementsByClassName('forward-btn')[0];
+    } else {
+      return document.getElementsByClassName('forward-btn')[0];
     }
   } catch {
     (err) => {
