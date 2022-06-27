@@ -205,8 +205,14 @@ function getGrader() {
 
 function getAnswer(project_type) {
   if (project_type === 'standard') {
+    let webCom = false; // no counter str inside the input Id
+    if (document.getElementById('result_validationresult_inappropriate')) {
+      webCom = true;
+    }
     let _ans = [];
-    [...Array(MAX_STANDARD_ANSWER_LEN).keys()].forEach((el) => {
+    let maxlen = webCom ? 1 : MAX_STANDARD_ANSWER_LEN;
+    [...Array(maxlen).keys()].forEach((el) => {
+      if (webCom) el = '';
       if (
         document.getElementById(
           `result${el}_validationresult${el}_inappropriate`
